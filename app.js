@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var twilio = require('twilio');
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 // Load configuration information from system environment variables.
 var TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
@@ -72,6 +73,20 @@ app.post('/hello', function(req, res, next) {
   res.set('Content-Type','text/xml');
   res.send(twiml.toString());
 });
+
+// Create a route to handle incoming SMS messages
+  app.post('/sms', (request, response) => {
+    console.log(
+      `Incoming message from ${request.body.From}: ${request.body.Body}`
+    );
+    // Here, we're writing and returning raw TwiML
+    response.type('text/xml');
+    response.send(`
+      <Response>
+        <Message>TwilioQuest rules</Message>
+      </Response>
+    `);
+  });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
