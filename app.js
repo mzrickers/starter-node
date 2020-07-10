@@ -45,6 +45,20 @@ app.post('/message', function(req, res, next) {
   });
 });
 
+// handle a POST request to send a MMS message (MEDIA)
+app.post('/mms', function(req, res, next) {
+  // Use the REST client to send a MMS message
+  client.messages.create({
+    to: req.body.to,
+    from: TWILIO_PHONE_NUMBER,
+    body: 'Cool Picture!',
+    mediaUrl: req.body.mediaUrl
+  }).then(function(message) {
+    // When we get a response from Twilio, respond to the HTTP POST request
+    res.send('Media is inbound!')
+  })
+})
+
 // handle a POST request to make an outbound call.
 // This is sent via ajax on our home page
 app.post('/call', function(req, res, next) {
